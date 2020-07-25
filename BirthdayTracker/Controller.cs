@@ -21,13 +21,11 @@ namespace BirthdayTracker
       private void RegisterCallbacks()
       {
          // * Exit - Button - Click * //
-         view.exit_Button.Click += ExitButton_Click;
+         view.exit_Button.Click += (object sender, EventArgs args) => 
+         {
+            Application.Exit();
+         };
          // END - Exit - Button - Click //
-      }
-
-      private void ExitButton_Click(object sender, EventArgs e)
-      {
-         Application.Exit();
       }
    }
 }
