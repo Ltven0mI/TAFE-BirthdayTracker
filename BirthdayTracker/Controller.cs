@@ -15,6 +15,8 @@ namespace BirthdayTracker
          this.view = view;
 
          RegisterCallbacks();
+
+         model.ReloadFriendData();
       }
 
 

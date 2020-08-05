@@ -1,14 +1,20 @@
 using System;
+using CsvHelper.Configuration.Attributes;
 
 namespace BirthdayTracker
 {
    public class Friend : IComparable
    {
-      public string Name { get; private set; }
-      public string Likes { get; private set; }
-      public string Dislikes { get; private set; }
-      public int BDayDay { get; private set; }
-      public int BDayMonth { get; private set; }
+      [Index(0)]
+      public string Name { get; set; }
+      [Index(1)]
+      public string Likes { get; set; }
+      [Index(2)]
+      public string Dislikes { get; set; }
+      [Index(3)]
+      public int BDayDay { get; set; }
+      [Index(4)]
+      public int BDayMonth { get; set; }
 
 
       public Friend(string name, string likes, string dislikes,
