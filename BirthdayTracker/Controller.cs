@@ -17,7 +17,8 @@ namespace BirthdayTracker
          RegisterCallbacks();
 
          model.ReloadFriendData();
-         view.DisplayFriendList(model.FriendList);
+         model.UpdateSearchResults();
+         view.DisplayFriendList(model.FriendList, model.SelectedFriend);
          view.DisplaySearchMonth(model.SelectedSearchMonth);
       }
 
@@ -36,8 +37,24 @@ namespace BirthdayTracker
          {
             model.NextSearchMonth();
             view.DisplaySearchMonth(model.SelectedSearchMonth);
+            view.DisplayFriendList(model.MonthSearchResults, model.SelectedFriend);
          };
          // END - Search - Button - Click //
+
+         // * Find - Button - Click * //
+         view.find_Button.Click += (object sender, EventArgs args) =>
+         {
+            // model.SetSelectedFriend(model.MonthSearchResults[1]);
+            Friend selectedFriend = model.FindFriend(view.find_TextBox.Text);
+            model.SetSelectedFriend(selectedFriend);
+            view.DisplayFriendList(model.MonthSearchResults, model.SelectedFriend);
+
+            if (selectedFriend != null)
+               view.DisplaySelectedFriendData(selectedFriend);
+            else
+               view.ClearSelectedFriendData();
+         };
+         // END - Find - Button - Click //
       }
    }
 }
