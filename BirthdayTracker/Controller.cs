@@ -17,6 +17,8 @@ namespace BirthdayTracker
          RegisterCallbacks();
 
          model.ReloadFriendData();
+         view.DisplayFriendList(model.FriendList);
+         view.DisplaySearchMonth(model.SelectedSearchMonth);
       }
 
 
@@ -28,6 +30,14 @@ namespace BirthdayTracker
             Application.Exit();
          };
          // END - Exit - Button - Click //
+
+         // * Search - Button - Click * //
+         view.search_Button.Click += (object sender, EventArgs args) =>
+         {
+            model.NextSearchMonth();
+            view.DisplaySearchMonth(model.SelectedSearchMonth);
+         };
+         // END - Search - Button - Click //
       }
    }
 }

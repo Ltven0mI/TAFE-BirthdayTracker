@@ -12,8 +12,13 @@ namespace BirthdayTracker
    {
       private const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";
 
+      public enum SearchMonth { All, Jan, Feb, March, April, May, June, July, Aug, Sep, Oct, Nov, Dec };
+      
       private List<Friend> friendList;
       public ReadOnlyCollection<Friend> FriendList { get; private set; }
+      public int SelectedFriendIndex { get; private set; }
+
+      public SearchMonth SelectedSearchMonth { get; private set; }
 
 
       public Model()
@@ -21,6 +26,16 @@ namespace BirthdayTracker
          // Initialize 'friendList' and wrap in ReadOnlyCollection
          friendList = new List<Friend>();
          FriendList = new ReadOnlyCollection<Friend>(friendList);
+
+         SelectedFriendIndex = -1;
+         SelectedSearchMonth = SearchMonth.All;
+      }
+
+      public void NextSearchMonth()
+      {
+         int searchIndex = (int)SelectedSearchMonth;
+         searchIndex = (searchIndex + 1) % 13;
+         SelectedSearchMonth = (SearchMonth)Enum.GetValues(typeof(SearchMonth)).GetValue(searchIndex);
       }
 
       public void ReloadFriendData()
