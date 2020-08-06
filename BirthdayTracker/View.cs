@@ -1,3 +1,5 @@
+using System.Text;
+using System.Collections.ObjectModel;
 using System;
 using System.Windows.Forms;
 
@@ -117,6 +119,33 @@ namespace BirthdayTracker
          this.search_Button = search_Button;
          this.search_TextBox = search_TextBox;
          this.exit_Button = exit_Button;
+      }
+
+      public void DisplayFriendList(ReadOnlyCollection<Friend> friendList, int selectedIndex=-1)
+      {
+         string[] lines = new string[friendList.Count];
+         for (int i=0; i<friendList.Count; i++)
+         {
+            Friend friend = friendList[i];
+            char paddingChar = (i == selectedIndex) ? '_' : ' ';
+            lines[i] = friend.Name.PadRight(14, paddingChar)
+            + friend.Likes.PadRight(16, paddingChar)
+            + friend.Dislikes.PadRight(16, paddingChar)
+            + friend.BDayDay.ToString().PadRight(8, paddingChar)
+            + friend.BDayMonth.ToString().PadRight(8, paddingChar);
+         }
+         birthdayList_TextBox.Text = String.Join("\r\n", lines);
+      }
+
+      public void DisplaySearchMonth(Model.SearchMonth searchMonth)
+      {
+         string text = "";
+         if (searchMonth == Model.SearchMonth.All)
+            text = searchMonth.ToString();
+         else
+            text = String.Format("{0} - {1}",
+               (int)searchMonth, searchMonth);
+         search_TextBox.Text = text;
       }
    }
 }
