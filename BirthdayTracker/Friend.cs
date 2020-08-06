@@ -29,7 +29,9 @@ namespace BirthdayTracker
 
       public int CompareTo(object other)
       {
-         throw new NotImplementedException();
+         if (other.GetType() != typeof(Friend))
+            throw new NotImplementedException();
+         return CompareTo((Friend)other);
       }
 
       public int CompareTo(Friend other)
