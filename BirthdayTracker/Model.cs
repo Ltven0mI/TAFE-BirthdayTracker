@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,14 @@ namespace BirthdayTracker
    {
       private const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";
 
+      public event EventHandler<ReadOnlyCollection<Friend>> FriendListChanged;
+      public event EventHandler<Friend> SelectedFriendChanged;
+
       public enum SearchMonth { All, Jan, Feb, March, April, May, June, July, Aug, Sep, Oct, Nov, Dec };
+      
+      // * Original Friend List * //
+      private List<Friend> originalFriendList;
+      // END - Original Friend List //
       
       // * Friend List * //
       private List<Friend> friendList;
@@ -21,25 +29,19 @@ namespace BirthdayTracker
 
       public Friend SelectedFriend { get; private set; }
       public SearchMonth SelectedSearchMonth { get; private set; }
-      
-      // * Search Results * //
-      private List<Friend> monthSearchResults;
-      public ReadOnlyCollection<Friend> MonthSearchResults { get; private set; }
-      // END - Search Results //
 
 
       public Model()
       {
+         // Initialize 'originalFriendList'
+         originalFriendList = new List<Friend>();
+
          // Initialize 'friendList' and wrap in ReadOnlyCollection
          friendList = new List<Friend>();
          FriendList = new ReadOnlyCollection<Friend>(friendList);
 
          SelectedFriend = null;
          SelectedSearchMonth = SearchMonth.All;
-
-         // Initialize 'monthSearchResults' and wrap in ReadOnlyCollection
-         monthSearchResults = new List<Friend>();
-         MonthSearchResults = new ReadOnlyCollection<Friend>(monthSearchResults);
       }
 
 
@@ -48,33 +50,37 @@ namespace BirthdayTracker
       {
          int searchIndex = (int)SelectedSearchMonth;
          searchIndex = (searchIndex + 1) % 13;
-         SetSearchMonth((SearchMonth)Enum.GetValues(typeof(SearchMonth)).GetValue(searchIndex));
-      }
-      private void SetSearchMonth(SearchMonth searchMonth)
-      {
          // Set 'SelectedSearchMonth' variable
-         SelectedSearchMonth = searchMonth;
+         SelectedSearchMonth = (SearchMonth)Enum.GetValues(typeof(SearchMonth)).GetValue(searchIndex);
          // Update the Search Results
          UpdateSearchResults();
       }
       public void UpdateSearchResults()
       {
          // Clear and add the new search results
-         monthSearchResults.Clear();
-         monthSearchResults.AddRange(GetFriendsByMonth(SelectedSearchMonth));
+         friendList.Clear();
+         friendList.AddRange(GetFriendsByMonth(SelectedSearchMonth));
+
+         // Invoke FriendListChanged event
+         FriendListChanged?.Invoke(this, FriendList);
       }
       #endregion
 
       #region Find Friend Methods
       public Friend FindFriend(string name)
       {
+         // Sanitize name (ToLower() is called later as to not interrupt the BinarySearch)
+         name = name.Trim();
+         if (String.IsNullOrEmpty(name))
+            return null;
+
          Friend sudoFriend = new Friend(name, null, null, 0, 0);
-         int result = monthSearchResults.BinarySearch(sudoFriend);
+         int result = friendList.BinarySearch(sudoFriend);
          if (result < 0)
-            result = monthSearchResults.FindIndex(c => c.Name.ToLower().Contains(name.ToLower()));
+            result = friendList.FindIndex(c => Regex.IsMatch(c.Name.ToLower(), name.ToLower()));
          if (result < 0)
             return null;
-         return monthSearchResults[result];
+         return friendList[result];
       }
       #endregion
 
@@ -83,6 +89,8 @@ namespace BirthdayTracker
       {
          // Assign the new SelectedFriend value
          SelectedFriend = friend;
+         // Invoke SelectedFriendChanged event
+         SelectedFriendChanged?.Invoke(this, friend);
       }
       #endregion
 
@@ -91,26 +99,26 @@ namespace BirthdayTracker
       {
          // Return a copy of the full FriendList if 'All' is passed
          if (searchMonth == SearchMonth.All)
-            return new List<Friend>(friendList);
+            return new List<Friend>(originalFriendList);
          
          // Return all friends with a birthday in the specified month
-         return friendList.FindAll(c => c.BDayMonth == (int)searchMonth);
+         return originalFriendList.FindAll(c => c.BDayMonth == (int)searchMonth);
       }
 
       #region CSV Read/Write Methods
       public void ReloadFriendData()
       {
          // Clear existing friendList
-         friendList.Clear();
+         originalFriendList.Clear();
          // Read friend data from file and insert into the friendList
-         friendList.AddRange(ReadFriendsFromFile(FRIEND_DATA_FILEPATH));
+         originalFriendList.AddRange(ReadFriendsFromFile(FRIEND_DATA_FILEPATH));
          // Sort friend list
-         friendList.Sort();
+         originalFriendList.Sort();
       }
       public void WriteFriendData()
       {
          // Write friend data to data file
-         WriteFriendsToFile(FRIEND_DATA_FILEPATH, friendList);
+         WriteFriendsToFile(FRIEND_DATA_FILEPATH, originalFriendList);
       }
       private List<Friend> ReadFriendsFromFile(string filepath)
       {

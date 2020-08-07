@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Collections.ObjectModel;
 using System;
 using System.Windows.Forms;
 
@@ -20,11 +22,37 @@ namespace BirthdayTracker
          model.UpdateSearchResults();
          view.DisplayFriendList(model.FriendList, model.SelectedFriend);
          view.DisplaySearchMonth(model.SelectedSearchMonth);
+
+         view.DisplaySelectedFriendData(null);
       }
 
 
       private void RegisterCallbacks()
       {
+         // * FriendList - Changed * //
+         model.FriendListChanged += (object sender, ReadOnlyCollection<Friend> friendList) =>
+         {
+            // Display the SelectedFriend data only...
+            // if it exists in the current FriendList
+            if (model.SelectedFriend != null)
+               view.DisplaySelectedFriendData(friendList.First(c => c == model.SelectedFriend));
+
+            // Display the changed FriendList
+            view.DisplayFriendList(friendList, model.SelectedFriend);
+         };
+         // END - FriendList - Changed //
+
+         // * SelectedFriend - Changed * //
+         model.SelectedFriendChanged += (object sender, Friend selectedFriend) =>
+         {
+            // Re-display FriendList to reflect the new SelectedFriend
+            view.DisplayFriendList(model.FriendList, selectedFriend);
+
+            // Display the data of the changed SelectedFriend
+            view.DisplaySelectedFriendData(selectedFriend);
+         };
+         // END - SelectedFriend - Changed //
+
          // * Exit - Button - Click * //
          view.exit_Button.Click += (object sender, EventArgs args) => 
          {
@@ -37,22 +65,45 @@ namespace BirthdayTracker
          {
             model.NextSearchMonth();
             view.DisplaySearchMonth(model.SelectedSearchMonth);
-            view.DisplayFriendList(model.MonthSearchResults, model.SelectedFriend);
          };
          // END - Search - Button - Click //
+
+         // * Find - TextBox - KeyPress * //
+         view.find_TextBox.KeyPress += (object sender, KeyPressEventArgs args) =>
+         {
+            // If enter was pressed: Perform click on Find Button
+            if (args.KeyChar == '\r')
+            {
+               view.find_Button.PerformClick();
+               args.Handled = true;
+            }
+         };
+         // END - Find - KeyPress - Enter //
 
          // * Find - Button - Click * //
          view.find_Button.Click += (object sender, EventArgs args) =>
          {
-            // model.SetSelectedFriend(model.MonthSearchResults[1]);
-            Friend selectedFriend = model.FindFriend(view.find_TextBox.Text);
-            model.SetSelectedFriend(selectedFriend);
-            view.DisplayFriendList(model.MonthSearchResults, model.SelectedFriend);
+            // Retrieve and sanitize queryString
+            string queryString = view.find_TextBox.Text.Trim();
+            view.find_TextBox.Text = queryString;
 
-            if (selectedFriend != null)
-               view.DisplaySelectedFriendData(selectedFriend);
-            else
-               view.ClearSelectedFriendData();
+            // Ensure queryString is not empty
+            if (String.IsNullOrEmpty(queryString))
+            {
+               MessageBox.Show("Please enter a name.", "NO NAME");
+               return;
+            }
+
+            // Find friend using the sanitized queryString
+            Friend selectedFriend = model.FindFriend(queryString);
+            model.SetSelectedFriend(selectedFriend);
+
+            // If no friend was found: Display message to user
+            if (selectedFriend == null)
+            {
+               string msg = String.Format("Sorry, no name found for '{0}'", queryString);
+               MessageBox.Show(msg, "NOT FOUND", MessageBoxButtons.OK);
+            }
          };
          // END - Find - Button - Click //
       }

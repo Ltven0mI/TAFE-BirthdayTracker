@@ -161,6 +161,9 @@ namespace BirthdayTracker
             lines.Add(line);
          }
 
+         if (friendList.Count <= 0)
+            lines.Add("No Friends to Display.");
+
          // Update BirthdayList TextBox Text
          birthdayList_TextBox.Text = String.Join("\r\n", lines);
       }
@@ -176,20 +179,11 @@ namespace BirthdayTracker
 
       public void DisplaySelectedFriendData(Friend friend)
       {
-         personsName_TextBox.Text = friend.Name;
-         likes_TextBox.Text = friend.Likes;
-         dislikes_TextBox.Text = friend.Dislikes;
-         bdayDay_TextBox.Text = friend.BDayDay.ToString();
-         bdayMonth_TextBox.Text = friend.BDayMonth.ToString();
-      }
-
-      public void ClearSelectedFriendData()
-      {
-         personsName_TextBox.Text = "";
-         likes_TextBox.Text = "";
-         dislikes_TextBox.Text = "";
-         bdayDay_TextBox.Text = "";
-         bdayMonth_TextBox.Text = "";
+         personsName_TextBox.Text = friend?.Name;
+         likes_TextBox.Text = friend?.Likes;
+         dislikes_TextBox.Text = friend?.Dislikes;
+         bdayDay_TextBox.Text = friend?.BDayDay.ToString();
+         bdayMonth_TextBox.Text = friend?.BDayMonth.ToString();
       }
    }
 }
