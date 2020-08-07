@@ -9,6 +9,15 @@ using CsvHelper;
 
 namespace BirthdayTracker
 {
+   /**********************************************************/
+   // Filename: Model.cs
+   // Purpose: To act as a wrapper for the program's data
+   // and provide methods for modifying that data.
+   // Author: Wade Rauschenbach
+   // Version: 0.1.0
+   // Date: 07-Aug-2020
+   // Tests: N/A
+   /**********************************************************/
    public class Model
    {
       private const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";

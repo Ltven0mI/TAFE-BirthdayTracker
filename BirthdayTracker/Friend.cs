@@ -3,6 +3,14 @@ using CsvHelper.Configuration.Attributes;
 
 namespace BirthdayTracker
 {
+   /**********************************************************/
+   // Filename: Friend.cs
+   // Purpose: To represent a friend and it's data.
+   // Author: Wade Rauschenbach
+   // Version: 0.1.0
+   // Date: 07-Aug-2020
+   // Tests: N/A
+   /**********************************************************/
    public class Friend : IComparable
    {
       [Index(0)]
