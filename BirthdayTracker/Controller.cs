@@ -5,6 +5,15 @@ using System.Windows.Forms;
 
 namespace BirthdayTracker
 {
+   /**********************************************************/
+   // Filename: Controller.cs
+   // Purpose: To act as the interface between the program's
+   // GUI (View) and the program's data (Model).
+   // Author: Wade Rauschenbach
+   // Version: 0.1.0
+   // Date: 07-Aug-2020
+   // Tests: N/A
+   /**********************************************************/
    public class Controller
    {
       private Model model;

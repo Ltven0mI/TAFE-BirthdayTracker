@@ -7,6 +7,15 @@ using System.Windows.Forms;
 
 namespace BirthdayTracker
 {
+   /**********************************************************/
+   // Filename: View.cs
+   // Purpose: To act as a wrapper for the program's GUI
+   // and to provide methods for modifying it.
+   // Author: Wade Rauschenbach
+   // Version: 0.1.0
+   // Date: 07-Aug-2020
+   // Tests: N/A
+   /**********************************************************/
    public class View
    {
       // * PersonsName - TextBox * //
