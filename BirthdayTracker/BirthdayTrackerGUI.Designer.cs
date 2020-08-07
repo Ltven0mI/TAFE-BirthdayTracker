@@ -264,6 +264,8 @@
             // 
             // birthdayList_Textbox
             // 
+            this.birthdayList_Textbox.AcceptsReturn = true;
+            this.birthdayList_Textbox.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.birthdayList_Textbox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.birthdayList_Textbox.Location = new System.Drawing.Point(24, 332);
             this.birthdayList_Textbox.Multiline = true;
@@ -272,6 +274,7 @@
             this.birthdayList_Textbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.birthdayList_Textbox.Size = new System.Drawing.Size(439, 169);
             this.birthdayList_Textbox.TabIndex = 3;
+            this.birthdayList_Textbox.WordWrap = false;
             // 
             // exit_Button
             // 
@@ -302,6 +305,7 @@
             this.search_Textbox.ReadOnly = true;
             this.search_Textbox.Size = new System.Drawing.Size(206, 23);
             this.search_Textbox.TabIndex = 1;
+            this.search_Textbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // search_Button
             // 
