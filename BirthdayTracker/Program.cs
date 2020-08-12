@@ -22,6 +22,11 @@ namespace BirthdayTracker
         public static Controller CONTROLLER { get; private set; }
         public static BirthdayTrackerGUI GUI { get; private set; }
 
+        /**********************************************************/
+        // Method: public Main ()
+        // Purpose: The main entry point for the application.
+        // - Constructs and initializes the MVC.
+        /**********************************************************/
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

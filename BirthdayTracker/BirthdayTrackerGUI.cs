@@ -19,6 +19,11 @@ namespace BirthdayTracker
     /**********************************************************/
     public partial class BirthdayTrackerGUI : Form
     {
+        /**********************************************************/
+        // Method: public BirthdayTrackerGUI ()
+        // Purpose: initialize components when an instance of BirthdayTrackerGUI
+        // is created.
+        /**********************************************************/
         public BirthdayTrackerGUI()
         {
             InitializeComponent();

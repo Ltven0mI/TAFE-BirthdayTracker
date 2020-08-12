@@ -39,7 +39,10 @@ namespace BirthdayTracker
       public Friend SelectedFriend { get; private set; }
       public SearchMonth SelectedSearchMonth { get; private set; }
 
-
+      /**********************************************************/
+      // Method: public Model ()
+      // Purpose: constructs and initializes a new instance of Model
+      /**********************************************************/
       public Model()
       {
          // Initialize 'originalFriendList'
@@ -55,6 +58,11 @@ namespace BirthdayTracker
 
 
       #region Search Methods
+      /**********************************************************/
+      // Method: public void NextSearchMonth ()
+      // Purpose: cycles to the next search month and updates search results
+      // (e.g. from 'All' to 'Jan', or from 'March' to 'April')
+      /**********************************************************/
       public void NextSearchMonth()
       {
          int searchIndex = (int)SelectedSearchMonth;
@@ -64,6 +72,12 @@ namespace BirthdayTracker
          // Update the Search Results
          UpdateSearchResults();
       }
+
+      /**********************************************************/
+      // Method: public void UpdateSearchResults ()
+      // Purpose: Updates 'FriendList' with the new search results and
+      // invokes the 'FriendListChanged' event.
+      /**********************************************************/
       public void UpdateSearchResults()
       {
          // Clear and add the new search results
@@ -76,6 +90,14 @@ namespace BirthdayTracker
       #endregion
 
       #region Find Friend Methods
+      /**********************************************************/
+      // Method: public Friend FindFriend (string name)
+      // Purpose: finds and returns a friend with the passed 'name'
+      // Returns: Friend if a friend with the given 'name' was found
+      // Returns: null if no friend with the given 'name' was found
+      // Inputs: string name
+      // Outputs: Friend
+      /**********************************************************/
       public Friend FindFriend(string name)
       {
          // Sanitize name (ToLower() is called later as to not interrupt the BinarySearch)
@@ -94,6 +116,12 @@ namespace BirthdayTracker
       #endregion
 
       #region Selected Friend Methods
+      /**********************************************************/
+      // Method: public void SetSelectedFriend (Friend friend)
+      // Purpose: sets the selected friend and
+      // - invokes the 'SelectedFriendChanged' event.
+      // Inputs: Friend friend
+      /**********************************************************/
       public void SetSelectedFriend(Friend friend)
       {
          // Assign the new SelectedFriend value
@@ -103,7 +131,13 @@ namespace BirthdayTracker
       }
       #endregion
 
-
+      /**********************************************************/
+      // Method: public List<Friend> GetFriendsByMonth (SearchMonth searchMonth)
+      // Purpose: get friends who's birthdays fall on the given 'searchMonth'
+      // Returns: a List of friends who's birthdays fall in the 'searchMonth'
+      // Inputs: SearchMonth searchMonth
+      // Outputs: List<Friend>
+      /**********************************************************/
       public List<Friend> GetFriendsByMonth(SearchMonth searchMonth)
       {
          // Return a copy of the full FriendList if 'All' is passed
@@ -115,6 +149,12 @@ namespace BirthdayTracker
       }
 
       #region CSV Read/Write Methods
+      /**********************************************************/
+      // Method: public void ReloadFriendData ()
+      // Purpose: reloads friend data from the file specified
+      // - in 'FRIEND_DATA_FILEPATH'.
+      // - Does NOT update search results.
+      /**********************************************************/
       public void ReloadFriendData()
       {
          // Clear existing friendList
@@ -124,6 +164,12 @@ namespace BirthdayTracker
          // Sort friend list
          originalFriendList.Sort();
       }
+      
+      /**********************************************************/
+      // Method: public void WriteFriendData ()
+      // Purpose: writes friend data to the file specified
+      // - in 'FRIEND_DATA_FILEPATH'.
+      /**********************************************************/
       public void WriteFriendData()
       {
          // Write friend data to data file

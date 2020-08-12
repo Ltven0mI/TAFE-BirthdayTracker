@@ -77,9 +77,10 @@ method signature, purpose, inputs, and outputs.
 ```csharp
 /**********************************************************/
 // Method: public bool IsValid (String name)
-// Purpose: validates a name suitable for the application
-// returns true if name meets requirements
-// returns false if name does not meet requirements
+// Purpose: validates a name suitable for the application.
+// - optional extra purpose line.
+// Returns: true if name meets requirements
+// Returns: false if name does not meet requirements
 // Inputs: String name
 // Outputs: bool
 /**********************************************************/

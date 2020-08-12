@@ -19,7 +19,13 @@ namespace BirthdayTracker
       private Model model;
       private View view;
 
-
+      /**********************************************************/
+      // Method: public Controller (Model model, View view)
+      // Purpose: Registers callbacks in 'model' and 'view' and
+      // initializes 'model' and 'view' with required values.
+      // Inputs: Model model - the corresponding Model of the MVC
+      // Inputs: View view - the corresponding View of the MVC
+      /**********************************************************/
       public Controller(Model model, View view)
       {
          this.model = model;
@@ -34,7 +40,6 @@ namespace BirthdayTracker
 
          view.DisplaySelectedFriendData(null);
       }
-
 
       private void RegisterCallbacks()
       {

@@ -93,6 +93,29 @@ namespace BirthdayTracker
       // END - Exit - Button //
 
 
+      /**********************************************************/
+      // Method: public View (
+      // - TextBox personsName_TextBox,
+      // - TextBox likes_TextBox,
+      // - TextBox dislikes_TextBox,
+      // - TextBox bdayDay_TextBox,
+      // - TextBox bdayMonth_TextBox,
+      // - TextBox find_TextBox,
+      // - Button find_Button,
+      // - Button new_Button,
+      // - Button update_Button,
+      // - Button delete_Button,
+      // - Button navFirst_Button,
+      // - Button navPrev_Button,
+      // - Button navNext_Button,
+      // - Button navLast_Button,
+      // - TextBox birthdayList_TextBox,
+      // - Button search_Button,
+      // - TextBox search_TextBox,
+      // - Button exit_Button
+      // )
+      // Purpose: constructs and initializes an instance of View.
+      /**********************************************************/
       public View(
          TextBox personsName_TextBox,
          TextBox likes_TextBox,
@@ -134,6 +157,16 @@ namespace BirthdayTracker
          this.exit_Button = exit_Button;
       }
 
+      /**********************************************************/
+      // Method: public void DisplayFriendList (
+      // - ReadOnlyCollection<Friend> friendList,
+      // - Friend selectedFriend=null
+      // )
+      // Purpose: formats and displays the passed 'friendList' on the GUI
+      // - with the optional 'selectedFriend' underscored if visible.
+      // Inputs: ReadOnlyCollection<Friend> friendList,
+      // - Friend selectedFriend=null
+      /**********************************************************/
       public void DisplayFriendList(ReadOnlyCollection<Friend> friendList, Friend selectedFriend=null)
       {
          // Initialize Lines List
@@ -177,6 +210,13 @@ namespace BirthdayTracker
          birthdayList_TextBox.Text = String.Join("\r\n", lines);
       }
 
+      /**********************************************************/
+      // Method: public void DisplaySearchMonth (Model.SearchMonth searchMonth)
+      // Purpose: displays the passed 'searchMonth' in the GUI 'search_TextBox'
+      // - in the format 'month-decimal - month-name' (e.g. '1 - Jan')
+      // - or simply 'All' if 'SearchMonth.All' is passed in 'searchMonth'
+      // Inputs: Model.SearchMonth searchMonth
+      /**********************************************************/
       public void DisplaySearchMonth(Model.SearchMonth searchMonth)
       {
          if (searchMonth == Model.SearchMonth.All)
@@ -186,6 +226,12 @@ namespace BirthdayTracker
                (int)searchMonth, searchMonth);
       }
 
+      /**********************************************************/
+      // Method: public void DisplaySelectedFriendData (Friend friend)
+      // Purpose: displays the data from the passed 'friend' in the GUI
+      // - data TextBoxes, or clears them if 'friend' is 'null'.
+      // Inputs: Friend friend
+      /**********************************************************/
       public void DisplaySelectedFriendData(Friend friend)
       {
          personsName_TextBox.Text = friend?.Name;
