@@ -6,6 +6,15 @@ using System.Windows.Forms;
 
 namespace BirthdayTracker
 {
+    /**********************************************************/
+    // Filename: Program.cs
+    // Purpose: The entry point for the application,
+    // creates and initializes the GUI and MVC.
+    // Author: Wade Rauschenbach
+    // Version: 0.1.0
+    // Date: 07-Aug-2020
+    // Tests: N/A
+    /**********************************************************/
     static class Program
     {
         public static Model MODEL { get; private set; }

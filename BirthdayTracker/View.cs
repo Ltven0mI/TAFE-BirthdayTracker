@@ -7,6 +7,15 @@ using System.Windows.Forms;
 
 namespace BirthdayTracker
 {
+   /**********************************************************/
+   // Filename: View.cs
+   // Purpose: To act as a wrapper for the program's GUI
+   // and to provide methods for modifying it.
+   // Author: Wade Rauschenbach
+   // Version: 0.1.0
+   // Date: 07-Aug-2020
+   // Tests: N/A
+   /**********************************************************/
    public class View
    {
       // * PersonsName - TextBox * //
@@ -161,6 +170,9 @@ namespace BirthdayTracker
             lines.Add(line);
          }
 
+         if (friendList.Count <= 0)
+            lines.Add("No Friends to Display.");
+
          // Update BirthdayList TextBox Text
          birthdayList_TextBox.Text = String.Join("\r\n", lines);
       }
@@ -176,20 +188,11 @@ namespace BirthdayTracker
 
       public void DisplaySelectedFriendData(Friend friend)
       {
-         personsName_TextBox.Text = friend.Name;
-         likes_TextBox.Text = friend.Likes;
-         dislikes_TextBox.Text = friend.Dislikes;
-         bdayDay_TextBox.Text = friend.BDayDay.ToString();
-         bdayMonth_TextBox.Text = friend.BDayMonth.ToString();
-      }
-
-      public void ClearSelectedFriendData()
-      {
-         personsName_TextBox.Text = "";
-         likes_TextBox.Text = "";
-         dislikes_TextBox.Text = "";
-         bdayDay_TextBox.Text = "";
-         bdayMonth_TextBox.Text = "";
+         personsName_TextBox.Text = friend?.Name;
+         likes_TextBox.Text = friend?.Likes;
+         dislikes_TextBox.Text = friend?.Dislikes;
+         bdayDay_TextBox.Text = friend?.BDayDay.ToString();
+         bdayMonth_TextBox.Text = friend?.BDayMonth.ToString();
       }
    }
 }
