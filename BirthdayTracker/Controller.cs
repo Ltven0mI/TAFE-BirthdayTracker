@@ -49,7 +49,7 @@ namespace BirthdayTracker
             // Display the SelectedFriend data only...
             // if it exists in the current FriendList
             if (model.SelectedFriend != null)
-               view.DisplaySelectedFriendData(friendList.First(c => c == model.SelectedFriend));
+               view.DisplaySelectedFriendData(friendList.FirstOrDefault(c => c == model.SelectedFriend));
 
             // Display the changed FriendList
             view.DisplayFriendList(friendList, model.SelectedFriend);
@@ -120,6 +120,94 @@ namespace BirthdayTracker
             }
          };
          // END - Find - Button - Click //
+
+         // * NavFirst - Button * //
+         view.navFirst_Button.Click += (object sender, EventArgs args) =>
+         {
+            NavigateToFirst();
+         };
+         // END - NavFirst - Button //
+
+         // * NavLast - Button * //
+         view.navLast_Button.Click += (object sender, EventArgs args) =>
+         {
+            NavigateToLast();
+         };
+         // END - NavLast - Button //
+
+         // * NavPrev - Button * //
+         view.navPrev_Button.Click += (object sender, EventArgs args) =>
+         {
+            NavigateToPrevious();
+         };
+         // END - NavPrev - Button //
+
+         // * NavNext - Button * //
+         view.navNext_Button.Click += (object sender, EventArgs args) =>
+         {
+            NavigateToNext();
+         };
+         // END - NavNext - Button //
+      }
+
+      /**********************************************************/
+      // Method:  public void NavigateToFirst ()
+      // Purpose: Navigates to the first friend in the BirthdayList.
+      /**********************************************************/
+      public void NavigateToFirst()
+      {
+         model.SetSelectedFriend(model.FriendList.FirstOrDefault());
+      }
+
+      /**********************************************************/
+      // Method:  public void NavigateToLast ()
+      // Purpose: Navigates to the last friend in the BirthdayList.
+      /**********************************************************/
+      public void NavigateToLast()
+      {
+         model.SetSelectedFriend(model.FriendList.LastOrDefault());
+      }
+
+      /**********************************************************/
+      // Method:  public void NavigateToPrevious ()
+      // Purpose: Navigates to the previous friend in the BirthdayList.
+      /**********************************************************/
+      public void NavigateToPrevious()
+      {
+         // Get index of current friend.
+         var friendList = model.FriendList;
+         int currentIndex = friendList.IndexOf(model.SelectedFriend);
+
+         // If 'currentIndex' is '-1' return, as this method only works
+         // - when there is a friend selected and the friend is in the
+         // - current search results.
+         if (currentIndex == -1)
+            return;
+
+         // Shift index and wrap it if out of bounds.
+         int newIndex = (currentIndex == 0) ? friendList.Count-1 : currentIndex - 1;
+         model.SetSelectedFriend(friendList[newIndex]);
+      }
+
+      /**********************************************************/
+      // Method:  public void NavigateToNext ()
+      // Purpose: Navigates to the next friend in the BirthdayList.
+      /**********************************************************/
+      public void NavigateToNext()
+      {
+         // Get index of current friend.
+         var friendList = model.FriendList;
+         int currentIndex = friendList.IndexOf(model.SelectedFriend);
+
+         // If 'currentIndex' is '-1' return, as this method only works
+         // - when there is a friend selected and the friend is in the
+         // - current search results.
+         if (currentIndex == -1)
+            return;
+
+         // Shift index and wrap it if out of bounds.
+         int newIndex = (currentIndex == friendList.Count-1) ? 0 : currentIndex + 1;
+         model.SetSelectedFriend(friendList[newIndex]);
       }
    }
 }
