@@ -7,9 +7,21 @@ namespace BirthdayTracker
    // Filename: Friend.cs
    // Purpose: To represent a friend and it's data.
    // Author: Wade Rauschenbach
-   // Version: 0.1.0
-   // Date: 07-Aug-2020
+   // Version: 0.2.0
+   // Date: 21-Aug-2020
    // Tests: N/A
+   /**********************************************************/
+
+   /*********************** Changelog ************************/
+   // [Unreleased]
+   // 
+   // [0.2.0] 21-Aug-2020
+   // | [Added]
+   // | - Implement Clone() method for cloning an instance by value.
+   // 
+   // [0.1.0] 07-Aug-2020
+   // | [Added]
+   // | - Initial Friend implementation.
    /**********************************************************/
    public class Friend : IComparable
    {
@@ -42,6 +54,20 @@ namespace BirthdayTracker
          Dislikes = dislikes;
          BDayDay = bdayDay;
          BDayMonth = bdayMonth;
+      }
+
+      /**********************************************************/
+      // Method:  public Friend Clone ()
+      // Purpose: Creates a copy of this instance by value.
+      // Returns: A new Friend instance with the same values as
+      //          this instance.
+      // Outputs: Friend
+      /**********************************************************/
+      public Friend Clone()
+      {
+         // Strings are passed by value, i.e. there is no need
+         // to create new string references for the constructor.
+         return new Friend(Name, Likes, Dislikes, BDayDay, BDayMonth);
       }
 
       /**********************************************************/

@@ -12,9 +12,21 @@ namespace BirthdayTracker
    // Purpose: To act as a wrapper for the program's GUI
    // and to provide methods for modifying it.
    // Author: Wade Rauschenbach
-   // Version: 0.1.0
-   // Date: 07-Aug-2020
+   // Version: 0.2.0
+   // Date: 21-Aug-2020
    // Tests: N/A
+   /**********************************************************/
+
+   /*********************** Changelog ************************/
+   // [Unreleased]
+   // 
+   // [0.2.0] 21-Aug-2020
+   // | [Changed]
+   // | - Modify DisplaySearchMonth to accept a MonthFilter instead of a Model.SearchMonth (Removed).
+   // 
+   // [0.1.0] 07-Aug-2020
+   // | [Added]
+   // | - Initial View implementation.
    /**********************************************************/
    public class View
    {
@@ -211,19 +223,15 @@ namespace BirthdayTracker
       }
 
       /**********************************************************/
-      // Method: public void DisplaySearchMonth (Model.SearchMonth searchMonth)
-      // Purpose: displays the passed 'searchMonth' in the GUI 'search_TextBox'
+      // Method: public void DisplaySearchMonth (MonthFilter monthFilter)
+      // Purpose: displays the passed 'monthFilter' in the GUI 'search_TextBox'
       // - in the format 'month-decimal - month-name' (e.g. '1 - Jan')
-      // - or simply 'All' if 'SearchMonth.All' is passed in 'searchMonth'
-      // Inputs: Model.SearchMonth searchMonth
+      // - or simply 'All' if 'SearchMonth.All' is passed in 'monthFilter'
+      // Inputs: MonthFilter monthFilter
       /**********************************************************/
-      public void DisplaySearchMonth(Model.SearchMonth searchMonth)
+      public void DisplaySearchMonth(MonthFilter monthFilter)
       {
-         if (searchMonth == Model.SearchMonth.All)
-            search_TextBox.Text = searchMonth.ToString();
-         else
-            search_TextBox.Text = String.Format("{0} - {1}",
-               (int)searchMonth, searchMonth);
+         search_TextBox.Text = monthFilter.ToString();
       }
 
       /**********************************************************/
