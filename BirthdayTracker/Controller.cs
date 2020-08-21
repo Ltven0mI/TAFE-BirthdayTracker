@@ -10,9 +10,22 @@ namespace BirthdayTracker
    // Purpose: To act as the interface between the program's
    // GUI (View) and the program's data (Model).
    // Author: Wade Rauschenbach
-   // Version: 0.1.0
-   // Date: 07-Aug-2020
+   // Version: 0.2.0
+   // Date: 21-Aug-2020
    // Tests: N/A
+   /**********************************************************/
+
+   /*********************** Changelog ************************/
+   // [Unreleased]
+   // 
+   // [0.2.0] 21-Aug-2020
+   // | [Changed]
+   // | - Controller private code overhauled to work with the new
+   // |   FriendList class workflow.
+   // 
+   // [0.1.0] 07-Aug-2020
+   // | [Added]
+   // | - Initial Controller implementation.
    /**********************************************************/
    public class Controller
    {
@@ -33,54 +46,19 @@ namespace BirthdayTracker
 
          RegisterCallbacks();
 
-         model.ReloadFriendData();
-         model.UpdateSearchResults();
-         view.DisplayFriendList(model.FriendList, model.SelectedFriend);
-         view.DisplaySearchMonth(model.SelectedSearchMonth);
-
-         view.DisplaySelectedFriendData(null);
+         model.ReadFriends();
+         model.FriendList.FilterByMonth(MonthFilter.All);
+         model.FriendList.SelectFriend(null);
       }
 
       private void RegisterCallbacks()
       {
-         // * FriendList - Changed * //
-         model.FriendListChanged += (object sender, ReadOnlyCollection<Friend> friendList) =>
-         {
-            // Display the SelectedFriend data only...
-            // if it exists in the current FriendList
-            if (model.SelectedFriend != null)
-               view.DisplaySelectedFriendData(friendList.FirstOrDefault(c => c == model.SelectedFriend));
-
-            // Display the changed FriendList
-            view.DisplayFriendList(friendList, model.SelectedFriend);
-         };
-         // END - FriendList - Changed //
-
-         // * SelectedFriend - Changed * //
-         model.SelectedFriendChanged += (object sender, Friend selectedFriend) =>
-         {
-            // Re-display FriendList to reflect the new SelectedFriend
-            view.DisplayFriendList(model.FriendList, selectedFriend);
-
-            // Display the data of the changed SelectedFriend
-            view.DisplaySelectedFriendData(selectedFriend);
-         };
-         // END - SelectedFriend - Changed //
-
          // * Exit - Button - Click * //
          view.exit_Button.Click += (object sender, EventArgs args) => 
          {
             Application.Exit();
          };
          // END - Exit - Button - Click //
-
-         // * Search - Button - Click * //
-         view.search_Button.Click += (object sender, EventArgs args) =>
-         {
-            model.NextSearchMonth();
-            view.DisplaySearchMonth(model.SelectedSearchMonth);
-         };
-         // END - Search - Button - Click //
 
          // * Find - TextBox - KeyPress * //
          view.find_TextBox.KeyPress += (object sender, KeyPressEventArgs args) =>
@@ -109,11 +87,11 @@ namespace BirthdayTracker
             }
 
             // Find friend using the sanitized queryString
-            Friend selectedFriend = model.FindFriend(queryString);
-            model.SetSelectedFriend(selectedFriend);
+            Friend foundFriend = model.FriendList.FindFriendByName(queryString);
+            model.FriendList.SelectFriend(foundFriend);
 
             // If no friend was found: Display message to user
-            if (selectedFriend == null)
+            if (foundFriend == null)
             {
                string msg = String.Format("Sorry, no name found for '{0}'", queryString);
                MessageBox.Show(msg, "NOT FOUND", MessageBoxButtons.OK);
@@ -121,93 +99,78 @@ namespace BirthdayTracker
          };
          // END - Find - Button - Click //
 
-         // * NavFirst - Button * //
+         // * Search - Button - Click * //
+         view.search_Button.Click += (object sender, EventArgs args) =>
+         {
+            // Filter the FriendList by the next MonthFilter
+            FriendList friendList = model.FriendList;
+            friendList.FilterByMonth(friendList.CurrentMonthFilter.GetNext());
+            friendList.SelectFriend(null);
+         };
+         // END - Search - Button - Click //
+
+         // * NavFirst - Button - Click * //
          view.navFirst_Button.Click += (object sender, EventArgs args) =>
          {
-            NavigateToFirst();
+            // Select the first friend in the FriendList
+            FriendList friendList = model.FriendList;
+            friendList.SelectFriend(friendList.GetFirstFriend());
          };
-         // END - NavFirst - Button //
+         // END - NavFirst - Button - Click //
 
-         // * NavLast - Button * //
-         view.navLast_Button.Click += (object sender, EventArgs args) =>
-         {
-            NavigateToLast();
-         };
-         // END - NavLast - Button //
-
-         // * NavPrev - Button * //
+         // * NavPrev - Button - Click * //
          view.navPrev_Button.Click += (object sender, EventArgs args) =>
          {
-            NavigateToPrevious();
+            // Select the previous friend in the FriendList
+            FriendList friendList = model.FriendList;
+            friendList.SelectFriend(friendList.GetPrevFriend());
          };
-         // END - NavPrev - Button //
+         // END - NavPrev - Button - Click //
 
-         // * NavNext - Button * //
+         // * NavNext - Button - Click * //
          view.navNext_Button.Click += (object sender, EventArgs args) =>
          {
-            NavigateToNext();
+            // Select the next friend in the FriendList
+            FriendList friendList = model.FriendList;
+            friendList.SelectFriend(friendList.GetNextFriend());
          };
-         // END - NavNext - Button //
-      }
+         // END - NavNext - Button - Click //
 
-      /**********************************************************/
-      // Method:  public void NavigateToFirst ()
-      // Purpose: Navigates to the first friend in the BirthdayList.
-      /**********************************************************/
-      public void NavigateToFirst()
-      {
-         model.SetSelectedFriend(model.FriendList.FirstOrDefault());
-      }
+         // * NavLast - Button - Click * //
+         view.navLast_Button.Click += (object sender, EventArgs args) =>
+         {
+            // Select the last friend in the FriendList
+            FriendList friendList = model.FriendList;
+            friendList.SelectFriend(friendList.GetLastFriend());
+         };
+         // END - NavLast - Button - Click //
 
-      /**********************************************************/
-      // Method:  public void NavigateToLast ()
-      // Purpose: Navigates to the last friend in the BirthdayList.
-      /**********************************************************/
-      public void NavigateToLast()
-      {
-         model.SetSelectedFriend(model.FriendList.LastOrDefault());
-      }
+         // * FriendList - SelectedFriendChanged * //
+         model.FriendList.SelectedFriendChanged += (object sender, Friend selectedFriend) =>
+         {
+            // Display the data of the changed SelectedFriend
+            view.DisplaySelectedFriendData(selectedFriend);
 
-      /**********************************************************/
-      // Method:  public void NavigateToPrevious ()
-      // Purpose: Navigates to the previous friend in the BirthdayList.
-      /**********************************************************/
-      public void NavigateToPrevious()
-      {
-         // Get index of current friend.
-         var friendList = model.FriendList;
-         int currentIndex = friendList.IndexOf(model.SelectedFriend);
+            // Re-display FriendList to reflect the new SelectedFriend
+            view.DisplayFriendList(((FriendList)sender).Filtered, selectedFriend);
+         };
+         // END - FriendList - SelectedFriendChanged //
 
-         // If 'currentIndex' is '-1' return, as this method only works
-         // - when there is a friend selected and the friend is in the
-         // - current search results.
-         if (currentIndex == -1)
-            return;
+         // * FriendList - MonthFilterChanged * //
+         model.FriendList.MonthFilterChanged += (object sender, MonthFilter monthFilter) =>
+         {
+            // Display the changed MonthFilter
+            view.DisplaySearchMonth(monthFilter);
+         };
+         // END - FriendList - MonthFilterChanged //
 
-         // Shift index and wrap it if out of bounds.
-         int newIndex = (currentIndex == 0) ? friendList.Count-1 : currentIndex - 1;
-         model.SetSelectedFriend(friendList[newIndex]);
-      }
-
-      /**********************************************************/
-      // Method:  public void NavigateToNext ()
-      // Purpose: Navigates to the next friend in the BirthdayList.
-      /**********************************************************/
-      public void NavigateToNext()
-      {
-         // Get index of current friend.
-         var friendList = model.FriendList;
-         int currentIndex = friendList.IndexOf(model.SelectedFriend);
-
-         // If 'currentIndex' is '-1' return, as this method only works
-         // - when there is a friend selected and the friend is in the
-         // - current search results.
-         if (currentIndex == -1)
-            return;
-
-         // Shift index and wrap it if out of bounds.
-         int newIndex = (currentIndex == friendList.Count-1) ? 0 : currentIndex + 1;
-         model.SetSelectedFriend(friendList[newIndex]);
+         // * FriendList - FilteredChanged * //
+         model.FriendList.FilteredChanged += (object sender, ReadOnlyCollection<Friend> filtered) =>
+         {
+            // Display the changed Filtered list
+            view.DisplayFriendList(filtered, ((FriendList)sender).SelectedFriend);
+         };
+         // END - FriendList - FilteredChanged //
       }
    }
 }
