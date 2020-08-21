@@ -70,6 +70,24 @@ testing notes (if any).
 /**********************************************************/
 ```
 
+### File / Class Changelog Comments
+
+All class files must have a commented file changelog which is placed after
+the file header comment with a single empty line between them.
+
+The changelog must also follow the format / guidelines from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+```csharp
+/*********************** Changelog ************************/
+// [Unreleased]
+// | [Changed]
+// | - Put upcoming changes here.
+// 
+// [0.1.0] 07-Aug-2020
+// | [Added]
+// | - Initial changelog comment.
+/**********************************************************/
+```
+
 ### Method Header Comments
 
 All methods must have a commented method header which contains the
@@ -83,6 +101,7 @@ method signature, purpose, inputs, and outputs.
 // Returns: false if name does not meet requirements
 // Inputs:  String name
 // Outputs: bool
+// Throws:  Exception - when something invalid happens.
 /**********************************************************/
 ```
 
