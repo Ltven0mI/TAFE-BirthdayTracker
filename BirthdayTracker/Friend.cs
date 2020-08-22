@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using System;
 using CsvHelper.Configuration.Attributes;
 
@@ -14,11 +15,17 @@ namespace BirthdayTracker
 
    /*********************** Changelog ************************/
    // [Unreleased]
-   // 
+   // | [Added]
+   // | - Add IsValidName(string name) for validating a name.
+   // | - Add IsValidLikes(string likes) for validating likes.
+   // | - Add IsValidDislikes(string dislikes) for validating dislikes.
+   // | - Add IsValidBirthMonth(int month) for validating a birth month.
+   // | - Add IsValidBirthDay(int day, int month) for validating a birth day.
+   //
    // [0.2.0] 21-Aug-2020
    // | [Added]
    // | - Implement Clone() method for cloning an instance by value.
-   // 
+   //
    // [0.1.0] 07-Aug-2020
    // | [Added]
    // | - Initial Friend implementation.
@@ -54,6 +61,85 @@ namespace BirthdayTracker
          Dislikes = dislikes;
          BDayDay = bdayDay;
          BDayMonth = bdayMonth;
+      }
+
+
+      /**********************************************************/
+      // Method:  public bool IsValidName (String name)
+      // Purpose: Validates whether the passed 'name' is a
+      //          valid name for a friend.
+      // Returns: true if 'name' is valid.
+      // Returns: false if 'name' is NOT valid.
+      // Inputs:  String name
+      // Outputs: bool
+      /**********************************************************/
+      public static bool IsValidName(string name)
+      {
+         return !String.IsNullOrWhiteSpace(name);
+      }
+
+      /**********************************************************/
+      // Method:  public bool IsValidLikes (String likes)
+      // Purpose: Validates whether the passed 'likes' is a
+      //          valid likes for a friend.
+      // Returns: true if 'likes' is valid.
+      // Returns: false if 'likes' is NOT valid.
+      // Inputs:  String likes
+      // Outputs: bool
+      /**********************************************************/
+      public static bool IsValidLikes(string likes)
+      {
+         return !String.IsNullOrWhiteSpace(likes);
+      }
+
+      /**********************************************************/
+      // Method:  public bool IsValidDislikes (String dislikes)
+      // Purpose: Validates whether the passed 'dislikes' is a
+      //          valid dislikes for a friend.
+      // Returns: true if 'dislikes' is valid.
+      // Returns: false if 'dislikes' is NOT valid.
+      // Inputs:  String dislikes
+      // Outputs: bool
+      /**********************************************************/
+      public static bool IsValidDislikes(string dislikes)
+      {
+         return !String.IsNullOrWhiteSpace(dislikes);
+      }
+
+      /**********************************************************/
+      // Method:  public bool IsValidBirthMonth (int month)
+      // Purpose: Validates whether the passed 'month' is a
+      //          valid birth month for a friend.
+      // Returns: true if 'month' is valid.
+      // Returns: false if 'month' is NOT valid.
+      // Inputs:  int month
+      // Outputs: bool
+      /**********************************************************/
+      public static bool IsValidBirthMonth(int month)
+      {
+         return (month > 0 && month <= 12);
+      }
+
+      /**********************************************************/
+      // Method:  public bool IsValidBirthDay (int day, int month)
+      // Purpose: Validates whether the passed 'day' is a
+      //          valid birth day for a friend born in the
+      //          passed birth 'month'.
+      // Returns: true if 'day' is a valid.
+      // Returns: false if either 'day' or 'month' are NOT valid.
+      // Inputs:  int day, int month
+      // Outputs: bool
+      /**********************************************************/
+      public static bool IsValidBirthDay(int day, int month)
+      {
+         // Ensure the passed month is valid
+         if (!IsValidBirthMonth(month))
+            return false;
+         
+         // Get the days in the passed month on a leap year (To allow for Leap Day)
+         int daysInMonth = DateTime.DaysInMonth(2000, month);
+         
+         return (day > 0 && day <= daysInMonth);
       }
 
       /**********************************************************/
