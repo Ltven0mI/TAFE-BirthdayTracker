@@ -20,12 +20,13 @@ namespace BirthdayTracker
    // [Unreleased]
    // | [Added]
    // | - Implement new friend functionality.
-   // 
+   // | - Implement update friend functionality.
+   //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
    // | - Controller private code overhauled to work with the new
    // |   FriendList class workflow.
-   // 
+   //
    // [0.1.0] 07-Aug-2020
    // | [Added]
    // | - Initial Controller implementation.
@@ -57,7 +58,7 @@ namespace BirthdayTracker
       private void RegisterCallbacks()
       {
          // * Exit - Button - Click * //
-         view.exit_Button.Click += (object sender, EventArgs args) => 
+         view.exit_Button.Click += (object sender, EventArgs args) =>
          {
             Application.Exit();
          };
@@ -151,43 +152,17 @@ namespace BirthdayTracker
          // * New - Button - Click * //
          view.new_Button.Click += (object sender, EventArgs args) =>
          {
-            // Get input data
-            string name = view.personsName_TextBox.Text.Trim();
-            string likes = view.likes_TextBox.Text.Trim();
-            string dislikes = view.dislikes_TextBox.Text.Trim();
-            string rawBirthMonth = view.bdayMonth_TextBox.Text.Trim();
-            string rawBirthDay = view.bdayDay_TextBox.Text.Trim();
-
-            // Validate user input
-            List<string> errorLines = new List<string>();
-            
-            if (!Friend.IsValidName(name))
-               errorLines.Add("Require name");
-            if (!Friend.IsValidLikes(likes))
-               errorLines.Add("Require likes");
-            if (!Friend.IsValidDislikes(dislikes))
-               errorLines.Add("Require dislikes");
-
+            string name = null;
+            string likes = null;
+            string dislikes = null;
             int birthMonth = 0;
-            if (!Int32.TryParse(rawBirthMonth, out birthMonth) ||
-               !Friend.IsValidBirthMonth(birthMonth))
-               errorLines.Add("Require birth month");
-            
             int birthDay = 0;
-            if (!Int32.TryParse(rawBirthDay, out birthDay) ||
-               !Friend.IsValidBirthDay(birthDay, birthMonth))
-               errorLines.Add("Require birth date");
-            
-            // Ensure validation was successful (Validate the validation...)
-            if (errorLines.Count > 0)
-            {
-               // Display error to user
-               string message = $"ERROR:\n{String.Join('\n', errorLines)}";
-               MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
-                  MessageBoxIcon.Exclamation);
-               // Return as there is no point continuing
+
+            // Validate input fields
+            bool validationSuccesful = ValidateFriendData(out name, out likes,
+               out dislikes, out birthMonth, out birthDay);
+            if (!validationSuccesful)
                return;
-            }
 
             // Store FriendList for usage below
             FriendList friendList = model.FriendList;
@@ -198,13 +173,32 @@ namespace BirthdayTracker
                // Display error to user
                string message = String.Format(
                   "ERROR:\n"
-                  + "A friend with the name '{0}' already exists.",
+                  + "A friend with the name '{0}' already exists.\n"
+                  + "(NOTE: friend names are NOT case-sensitive)",
                   name
                );
                MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
                   MessageBoxIcon.Exclamation);
                // Return as there is no point continuing
+               return;
             }
+
+            // Prompt user to continue
+            string continueMessage =
+               $"Create new friend:\n"
+               + $"| Name: '{name}'\n"
+               + $"| Likes: '{likes}'\n"
+               + $"| Dislikes: '{dislikes}'\n"
+               + $"| Birth Day: '{birthDay}'\n"
+               + $"| Birth Month: '{birthMonth}'\n"
+               + "Do you wish to continue?";
+            DialogResult continueResult = MessageBox.Show(continueMessage,
+               "NEW FRIEND", MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question);
+            
+            // Ensure the user wants to continue
+            if (continueResult != DialogResult.Yes)
+               return;
 
             // Add the new friend
             friendList.Add(new Friend(
@@ -218,6 +212,82 @@ namespace BirthdayTracker
             friendList.SelectFriend(null);
          };
          // END - New - Button - Click //
+
+         // * Update - Button - Click * //
+         view.update_Button.Click += (object sender, EventArgs args) =>
+         {
+            // Get FriendList for use below
+            FriendList friendList = model.FriendList;
+
+            // Ensure a friend is selected
+            Friend selectedFriend = friendList.SelectedFriend;
+            if (selectedFriend == null)
+            {
+               // Display error to user
+               string message = "ERROR:\n"
+               + "No Friend is selected.\n"
+               + "Please select a friend and try again.";
+               MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
+                  MessageBoxIcon.Exclamation);
+               // Return as there is no point continuing
+               return;
+            }
+
+            string name = null;
+            string likes = null;
+            string dislikes = null;
+            int birthMonth = 0;
+            int birthDay = 0;
+
+            // Ensure input fields are valid
+            bool validationSuccesful = ValidateFriendData(out name, out likes,
+               out dislikes, out birthMonth, out birthDay);
+            if (!validationSuccesful)
+               return;
+
+            // Ensure name is unchanging or is available
+            if (name.ToLower() != selectedFriend.Name.ToLower() &&
+            friendList.FindFriendByName(name, true) != null)
+            {
+               // Display error to user
+               string message = "ERROR:\n"
+               + $"Cannot change name to '{name}' "
+               + "as that name is already taken.\n"
+               + "(NOTE: friend names are NOT case-sensitive)";
+               MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
+                  MessageBoxIcon.Exclamation);
+               // Return as there is no point continuing
+               return;
+            }
+
+            // Prompt user to continue
+            string continueMessage =
+               $"Update friend '{selectedFriend.Name}' to\n"
+               + $"| Name: '{name}'\n"
+               + $"| Likes: '{likes}'\n"
+               + $"| Dislikes: '{dislikes}'\n"
+               + $"| Birth Day: '{birthDay}'\n"
+               + $"| Birth Month: '{birthMonth}'\n"
+               + "Do you wish to continue?";
+            DialogResult continueResult = MessageBox.Show(continueMessage,
+               "UPDATE FRIEND", MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question);
+            
+            // Ensure the user wants to continue
+            if (continueResult != DialogResult.Yes)
+               return;
+            
+            // Update the selected friend
+            friendList.Update(selectedFriend.Name,
+               new Friend(name, likes, dislikes, birthDay, birthMonth));
+            
+            // Refresh FriendList filter
+            friendList.FilterByMonth(friendList.CurrentMonthFilter);
+
+            // Clear the SelectedFriend (Also clears text fields)
+            friendList.SelectFriend(null);
+         };
+         // END - Update - Button - Click //
 
          // * FriendList - SelectedFriendChanged * //
          model.FriendList.SelectedFriendChanged += (object sender, Friend selectedFriend) =>
@@ -245,6 +315,65 @@ namespace BirthdayTracker
             view.DisplayFriendList(filtered, ((FriendList)sender).SelectedFriend);
          };
          // END - FriendList - FilteredChanged //
+      }
+
+      /**********************************************************/
+      // Method:  private bool ValidateFriendData (
+      //             out string name, out string likes,
+      //             out string dislikes, out int birthMonth,
+      //             out int birthDay
+      //          )
+      // Purpose: Validates and parses the user entered friend data.
+      //          In the case of invalid data, an error is displayed
+      //          to the user describing what data is invalid. 
+      // Returns: true if all fields are valid.
+      // Returns: false if any fields are NOT valid.
+      // Inputs:  out string name, out string likes,
+      //          out string dislikes, out int birthMonth,
+      //          out int birthDay.
+      // Outputs: bool
+      /**********************************************************/
+      private bool ValidateFriendData(out string name, out string likes,
+      out string dislikes, out int birthMonth, out int birthDay)
+      {
+         // Get input data
+         name = view.personsName_TextBox.Text.Trim();
+         likes = view.likes_TextBox.Text.Trim();
+         dislikes = view.dislikes_TextBox.Text.Trim();
+         string rawBirthMonth = view.bdayMonth_TextBox.Text.Trim();
+         string rawBirthDay = view.bdayDay_TextBox.Text.Trim();
+
+         // Validate user input
+         List<string> errorLines = new List<string>();
+
+         if (!Friend.IsValidName(name))
+            errorLines.Add("Require name");
+         if (!Friend.IsValidLikes(likes))
+            errorLines.Add("Require likes");
+         if (!Friend.IsValidDislikes(dislikes))
+            errorLines.Add("Require dislikes");
+
+         if (!Int32.TryParse(rawBirthMonth, out birthMonth) ||
+            !Friend.IsValidBirthMonth(birthMonth))
+            errorLines.Add("Require birth month");
+
+         if (!Int32.TryParse(rawBirthDay, out birthDay) ||
+            !Friend.IsValidBirthDay(birthDay, birthMonth))
+            errorLines.Add("Require birth date");
+
+         // Ensure validation was successful (Validate the validation...)
+         if (errorLines.Count > 0)
+         {
+            // Display error to user
+            string message = $"ERROR:\n{String.Join('\n', errorLines)}";
+            MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
+               MessageBoxIcon.Exclamation);
+            // Return as there is no point continuing
+            return false;
+         }
+
+         // Return true for success
+         return true;
       }
    }
 }
