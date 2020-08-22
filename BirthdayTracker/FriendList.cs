@@ -17,6 +17,8 @@ namespace BirthdayTracker
 
    /*********************** Changelog ************************/
    // [Unreleased]
+   // | [Added]
+   // | - Add Update(string name, Friend friend) for updating friends.
    // 
    // [0.1.0] 20-Aug-2020
    // | [Added]
@@ -98,6 +100,36 @@ namespace BirthdayTracker
             ));
          // Add a copy of the passed friend
          unfiltered.Add(friend.Clone());
+         // Sort the unfiltered list (BinarySearch requires a sorted list)
+         unfiltered.Sort();
+      }
+
+      /**********************************************************/
+      // Method:  public void Update (string name, Friend friend)
+      // Purpose: Updates the existing friend named 'name' to
+      //          match the data in the passed 'friend'.
+      // Inputs:  string name, Friend friend
+      // Throws:  InvalidOperationException - if no friend exists
+      //          with the passed 'name'.
+      /**********************************************************/
+      public void Update(string name, Friend friend)
+      {
+         // Attempt to get an existing Friend with 'name'
+         Friend existingFriend = unfiltered.Find(
+            c => c.Name.ToLower() == name.ToLower());
+         
+         // Ensure an existing friend was found
+         if (existingFriend == null)
+            throw new InvalidOperationException(
+               $"No friend exists with the name '{name}'.");
+         
+         // Update data in existing friend
+         existingFriend.Name = friend.Name;
+         existingFriend.Likes = friend.Likes;
+         existingFriend.Dislikes = friend.Dislikes;
+         existingFriend.BDayMonth = friend.BDayMonth;
+         existingFriend.BDayDay = friend.BDayDay;
+
          // Sort the unfiltered list (BinarySearch requires a sorted list)
          unfiltered.Sort();
       }
