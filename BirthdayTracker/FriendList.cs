@@ -10,15 +10,18 @@ namespace BirthdayTracker
    // Purpose:    To provide a container for storing, sorting,
    //             and finding friends.
    // Author:     Wade Rauschenbach
-   // Version:    0.1.0
+   // Version:    0.2.0
    // Date:       20-Aug-2020
    // Tests:      N/A
    /**********************************************************/
 
    /*********************** Changelog ************************/
    // [Unreleased]
+   //
+   // [0.2.0] 23-Aug-2020
    // | [Added]
    // | - Add Update(string name, Friend friend) for updating friends.
+   // | - Add Delete(Friend friend) for deleting friends.
    // 
    // [0.1.0] 20-Aug-2020
    // | [Added]
@@ -129,6 +132,40 @@ namespace BirthdayTracker
          existingFriend.Dislikes = friend.Dislikes;
          existingFriend.BDayMonth = friend.BDayMonth;
          existingFriend.BDayDay = friend.BDayDay;
+
+         // Sort the unfiltered list (BinarySearch requires a sorted list)
+         unfiltered.Sort();
+      }
+
+      /**********************************************************/
+      // Method:  public void Delete (Friend friend)
+      // Purpose: Delete the passed 'friend' from this FriendList.
+      // Inputs:  Friend friend
+      // Throws:  InvalidOperationException - if either the passed
+      //          'friend' does not exist in this FriendList,
+      //          or the passed 'friend' doesn't match the
+      //          existing 'friend'.
+      /**********************************************************/
+      public void Delete(Friend friend)
+      {
+         // Get the existing friend with a matching name
+         Friend existingFriend = unfiltered.Find(
+            c => c.Name.ToLower() == friend.Name.ToLower());
+         
+         // Ensure the friend to delete exists
+         if (existingFriend == null)
+            throw new InvalidOperationException(
+               $"No friend with the name '{friend.Name}' exists."
+            );
+         
+         // Ensure the passed friend matches the existing friend
+         if (existingFriend.CompareByValue(friend) == false)
+            throw new InvalidOperationException(
+               "The passed friend does not match the existing friend."
+            );
+         
+         // Remove friend
+         unfiltered.Remove(existingFriend);
 
          // Sort the unfiltered list (BinarySearch requires a sorted list)
          unfiltered.Sort();
