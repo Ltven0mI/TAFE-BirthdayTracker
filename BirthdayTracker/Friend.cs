@@ -8,19 +8,22 @@ namespace BirthdayTracker
    // Filename: Friend.cs
    // Purpose: To represent a friend and it's data.
    // Author: Wade Rauschenbach
-   // Version: 0.2.0
+   // Version: 0.3.0
    // Date: 21-Aug-2020
    // Tests: N/A
    /**********************************************************/
 
    /*********************** Changelog ************************/
    // [Unreleased]
+   //
+   // [0.3.0] 23-Aug-2020
    // | [Added]
    // | - Add IsValidName(string name) for validating a name.
    // | - Add IsValidLikes(string likes) for validating likes.
    // | - Add IsValidDislikes(string dislikes) for validating dislikes.
    // | - Add IsValidBirthMonth(int month) for validating a birth month.
    // | - Add IsValidBirthDay(int day, int month) for validating a birth day.
+   // | - Add CompareByValues(Friend other) for comparing friends by value.
    //
    // [0.2.0] 21-Aug-2020
    // | [Added]
@@ -154,6 +157,31 @@ namespace BirthdayTracker
          // Strings are passed by value, i.e. there is no need
          // to create new string references for the constructor.
          return new Friend(Name, Likes, Dislikes, BDayDay, BDayMonth);
+      }
+
+      /**********************************************************/
+      // Method:  public bool CompareByValue (Friend other)
+      // Purpose: Compares this instance and 'other' by value.
+      // Returns: true if all values are identical
+      // Returns: false if any values are NOT identical
+      // Inputs:  Friend other
+      // Outputs: bool
+      // Throws:  ArgumentNullException - if 'other' is null
+      /**********************************************************/
+      public bool CompareByValue(Friend other)
+      {
+         // Ensure other is not null
+         if (other == null)
+            throw new ArgumentNullException("The argument 'other' was null.");
+         
+         // Return whether all values are identical or not
+         return (
+            Name.ToLower() == other.Name.ToLower() &&
+            Likes == other.Likes &&
+            Dislikes == other.Dislikes &&
+            BDayDay == other.BDayDay &&
+            BDayMonth == other.BDayMonth
+         );
       }
 
       /**********************************************************/
