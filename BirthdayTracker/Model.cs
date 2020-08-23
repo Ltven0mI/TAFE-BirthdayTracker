@@ -98,6 +98,7 @@ namespace BirthdayTracker
          {
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
+               csv.Configuration.HasHeaderRecord = false;
                csv.WriteRecords(friendList);
             }
          }
