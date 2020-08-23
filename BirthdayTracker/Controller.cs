@@ -21,6 +21,7 @@ namespace BirthdayTracker
    // | [Added]
    // | - Implement new friend functionality.
    // | - Implement update friend functionality.
+   // | - Implement delete friend functionality.
    //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
@@ -219,19 +220,10 @@ namespace BirthdayTracker
             // Get FriendList for use below
             FriendList friendList = model.FriendList;
 
-            // Ensure a friend is selected
-            Friend selectedFriend = friendList.SelectedFriend;
-            if (selectedFriend == null)
-            {
-               // Display error to user
-               string message = "ERROR:\n"
-               + "No Friend is selected.\n"
-               + "Please select a friend and try again.";
-               MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
-                  MessageBoxIcon.Exclamation);
-               // Return as there is no point continuing
+            // Ensure there is a friend selected
+            Friend selectedFriend = null;
+            if (!EnsureFriendIsSelected(out selectedFriend))
                return;
-            }
 
             string name = null;
             string likes = null;
@@ -288,6 +280,66 @@ namespace BirthdayTracker
             friendList.SelectFriend(null);
          };
          // END - Update - Button - Click //
+
+         // * Delete - Button - Click * //
+         view.delete_Button.Click += (object sender, EventArgs args) =>
+         {
+            // Ensure there is a friend selected
+            Friend selectedFriend = null;
+            if (!EnsureFriendIsSelected(out selectedFriend))
+               return;
+            
+            string name = null;
+            string likes = null;
+            string dislikes = null;
+            int birthMonth = 0;
+            int birthDay = 0;
+
+            // Ensure input fields are valid
+            bool validationSuccesful = ValidateFriendData(out name, out likes,
+               out dislikes, out birthMonth, out birthDay);
+            if (!validationSuccesful)
+               return;
+            
+            // Ensure the friend data is unchanged
+            if (!selectedFriend.CompareByValue(new Friend(
+               name, likes, dislikes, birthDay, birthMonth)))
+            {
+               // Display error to user
+               string message = "ERROR:\n"
+                  + $"Unable to delete friend named '{selectedFriend.Name}'.\n"
+                  + "Please ensure the friend data matches the current friend.";
+               MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
+                  MessageBoxIcon.Exclamation);
+               // Return as there is no point continuing
+               return;
+            }
+
+            // Prompt user to continue
+            string continueMessage =
+               $"You are about to delete the friend '{selectedFriend.Name}'\n"
+               + "Do you wish to continue?";
+            DialogResult continueResult = MessageBox.Show(continueMessage,
+               "DELETE FRIEND", MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question);
+            
+            // Ensure the user wants to continue
+            if (continueResult != DialogResult.Yes)
+               return;
+
+            // Store FriendList for use below
+            FriendList friendList = model.FriendList;
+            
+            // Delete the friend
+            friendList.Delete(selectedFriend);
+
+            // Refresh the FriendList filter
+            friendList.FilterByMonth(friendList.CurrentMonthFilter);
+
+            // Clear the selected friend (Also clears input fields)
+            friendList.SelectFriend(null);
+         };
+         // END - Delete - Button - Click //
 
          // * FriendList - SelectedFriendChanged * //
          model.FriendList.SelectedFriendChanged += (object sender, Friend selectedFriend) =>
@@ -369,6 +421,37 @@ namespace BirthdayTracker
             MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
                MessageBoxIcon.Exclamation);
             // Return as there is no point continuing
+            return false;
+         }
+
+         // Return true for success
+         return true;
+      }
+
+      /**********************************************************/
+      // Method:  private bool EnsureFriendIsSelected (out Friend friend)
+      // Purpose: Ensure a friend is currently selected and
+      //          populates 'friend' with the selected friend.
+      //          In the case that no friend is selected
+      //          an error is displayed to the user.
+      // Returns: true if there is a friend selected
+      // Returns: false if there is NOT a friend selected
+      // Inputs:  out Friend friend
+      // Outputs: bool
+      /**********************************************************/
+      private bool EnsureFriendIsSelected(out Friend friend)
+      {
+         // Ensure a friend is selected
+         friend = model.FriendList.SelectedFriend;
+         if (friend == null)
+         {
+            // Display error to user
+            string message = "ERROR:\n"
+            + "No Friend is selected.\n"
+            + "Please select a friend and try again.";
+            MessageBox.Show(message, "ERROR(S) FOUND!", MessageBoxButtons.OK,
+               MessageBoxIcon.Exclamation);
+            // Return false for error
             return false;
          }
 
