@@ -22,6 +22,7 @@ namespace BirthdayTracker
    // | - Implement new friend functionality.
    // | - Implement update friend functionality.
    // | - Implement delete friend functionality.
+   // | - Implement exit options prompt.
    //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
@@ -58,13 +59,6 @@ namespace BirthdayTracker
 
       private void RegisterCallbacks()
       {
-         // * Exit - Button - Click * //
-         view.exit_Button.Click += (object sender, EventArgs args) =>
-         {
-            Application.Exit();
-         };
-         // END - Exit - Button - Click //
-
          // * Find - TextBox - KeyPress * //
          view.find_TextBox.KeyPress += (object sender, KeyPressEventArgs args) =>
          {
@@ -340,6 +334,32 @@ namespace BirthdayTracker
             friendList.SelectFriend(null);
          };
          // END - Delete - Button - Click //
+
+         // * Exit - Button - Click * //
+         view.exit_Button.Click += (object sender, EventArgs args) =>
+         {
+            // Prompt user to save or not
+            string message = "You are about to write all records to the "
+            + "external file and exit\n\n"
+            + "Click YES if you wish to write the records and exit\n"
+            + "Click NO if you only want to exit (no writing)\n"
+            + "Click CANCEL if you don't want to exit";
+            DialogResult exitResult = MessageBox.Show(message, "EXIT OPTIONS",
+               MessageBoxButtons.YesNoCancel);
+            
+            // Check if user accidentally click exit...
+            if (exitResult == DialogResult.Cancel)
+               return;
+            
+            // Check if user wants to write records
+            if (exitResult == DialogResult.Yes)
+               model.WriteFriends();
+            
+            // Only exit if user chose YES or NO (Just a precaution...)
+            if (exitResult == DialogResult.Yes || exitResult == DialogResult.No)
+               Application.Exit();
+         };
+         // END - Exit - Button - Click //
 
          // * FriendList - SelectedFriendChanged * //
          model.FriendList.SelectedFriendChanged += (object sender, Friend selectedFriend) =>
