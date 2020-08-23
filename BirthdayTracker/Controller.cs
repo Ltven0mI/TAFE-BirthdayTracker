@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
@@ -23,6 +24,8 @@ namespace BirthdayTracker
    // | - Implement update friend functionality.
    // | - Implement delete friend functionality.
    // | - Implement exit options prompt.
+   // | [Fixed]
+   // | - Add exception handling for Friend loading.
    //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
@@ -51,14 +54,36 @@ namespace BirthdayTracker
          this.view = view;
 
          RegisterCallbacks();
-
-         model.ReadFriends();
-         model.FriendList.FilterByMonth(MonthFilter.All);
-         model.FriendList.SelectFriend(null);
       }
 
       private void RegisterCallbacks()
       {
+         // * Program - GUI - Shown * //
+         Program.GUI.Shown += (object sender, EventArgs args) =>
+         {
+            bool isLoadingFriends = true;
+            while (isLoadingFriends)
+            {
+               DialogResult dialogResult = LoadFriendRecords();
+               switch (dialogResult)
+               {
+                  case DialogResult.None:
+                     isLoadingFriends = false;
+                     break;
+                  case DialogResult.Ignore:
+                     isLoadingFriends = false;
+                     break;
+                  case DialogResult.Abort:
+                     Application.Exit();
+                     return;
+               }
+            }
+
+            model.FriendList.FilterByMonth(MonthFilter.All);
+            model.FriendList.SelectFriend(null);
+         };
+         // END - Program - GUI - Shown //
+
          // * Find - TextBox - KeyPress * //
          view.find_TextBox.KeyPress += (object sender, KeyPressEventArgs args) =>
          {
@@ -477,6 +502,49 @@ namespace BirthdayTracker
 
          // Return true for success
          return true;
+      }
+      
+      /**********************************************************/
+      // Method:  private DialogResult LoadFriendRecords ()
+      // Purpose: Attempt to load friend records from the save file.
+      //          In the case that loading was unsuccessful an
+      //          error is displayed to the user.
+      // Returns: None if loading was successful
+      // Returns: Abort if there was an error and
+      //          the user wants to close the application.
+      // Returns: Retry if the user wants to retry loading.
+      // Returns: Ignore if the user wants to ignore the error
+      //          and continue with no friends.
+      // Outputs: DialogResult
+      /**********************************************************/
+      private DialogResult LoadFriendRecords()
+      {
+         // Attempt to read friend records
+         try
+         {
+            model.ReadFriends();
+            return DialogResult.None;
+         }
+         catch (FileNotFoundException)
+         {
+            // Display error to user
+            string message = "An error occured while loading friend records:\n"
+               + $"Unable to find CSV file '{Model.FRIEND_DATA_FILEPATH}'";
+            DialogResult dialogResult = MessageBox.Show(message, "ERROR",
+               MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+            // Return result
+            return dialogResult;
+         }
+         catch (Exception e)
+         {
+            // Display error to user
+            string message = "An error occured while loading friend records:\n"
+               + e.ToString();
+            MessageBox.Show(message, "ERROR", MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
+            // Return the abort result
+            return DialogResult.Abort;
+         }
       }
    }
 }

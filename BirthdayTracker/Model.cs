@@ -18,6 +18,8 @@ namespace BirthdayTracker
 
    /*********************** Changelog ************************/
    // [Unreleased]
+   // | [Changed]
+   // | - Change FRIEND_DATA_FILEPATH from private to public.
    //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
@@ -43,7 +45,7 @@ namespace BirthdayTracker
    /**********************************************************/
    public class Model
    {
-      private const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";
+      public const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";
       
       public FriendList FriendList { get; private set; }
 
@@ -62,6 +64,15 @@ namespace BirthdayTracker
       // Purpose: Reads friend data from the file specified
       //          in 'FRIEND_DATA_FILEPATH'.
       //          Does NOT update search results.
+      // Throws:  ArgumentException - if the save file path is an empty string.
+      //          ArgumentNullException - if save file path is null.
+      //          FileNotFoundException - if the save file cannot be found.
+      //          DirectoryNotFoundException - if the specified save file
+      //              path is invalid.
+      //          IOException - if save file path includes incorrect or invalid
+      //             syntax for file name, directory name, or volume label.
+      //          TypeConverterException - if an error occurs while reading
+      //             from the CSV file.
       /**********************************************************/
       public void ReadFriends()
       {
@@ -79,7 +90,22 @@ namespace BirthdayTracker
          // Write friends data to file
          WriteFriendsToFile(FRIEND_DATA_FILEPATH, FriendList.Unfiltered);
       }
-
+      
+      /**********************************************************/
+      // Method:  private List<Friend> ReadFriendsFromFile (string filepath)
+      // Purpose: Read friend records from a CSV file at 'filepath'
+      // Returns: List<Friend> containing friend records on success
+      // Inputs:  string filepath
+      // Outputs: List<Friend>
+      // Throws:  ArgumentException - if 'filepath' is an empty string.
+      //          ArgumentNullException - if 'filepath' is null.
+      //          FileNotFoundException - if the file cannot be found.
+      //          DirectoryNotFoundException - if the specified path is invalid.
+      //          IOException - if 'filepath' includes incorrect or invalid
+      //             syntax for file name, directory name, or volume label.
+      //          TypeConverterException - if an error occurs while reading
+      //             from the CSV file.
+      /**********************************************************/
       private List<Friend> ReadFriendsFromFile(string filepath)
       {
          using (var reader = new StreamReader(filepath))
