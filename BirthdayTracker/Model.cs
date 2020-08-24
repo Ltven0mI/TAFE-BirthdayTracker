@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.IO;
@@ -11,15 +12,18 @@ namespace BirthdayTracker
    // Purpose:    To act as a wrapper for the program's data
    //             and provide methods for modifying that data.
    // Author:     Wade Rauschenbach
-   // Version:    0.2.0
-   // Date:       21-Aug-2020
+   // Version:    0.3.0
+   // Date:       24-Aug-2020
    // Tests:      N/A
    /**********************************************************/
 
    /*********************** Changelog ************************/
    // [Unreleased]
+   //
+   // [0.3.0] 24-Aug-2020
    // | [Changed]
    // | - Change FRIEND_DATA_FILEPATH from private to public.
+   // | - Change FRIEND_DATA_FILEPATH from public back to private.
    //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
@@ -45,7 +49,7 @@ namespace BirthdayTracker
    /**********************************************************/
    public class Model
    {
-      public const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";
+      private const string FRIEND_DATA_FILEPATH = "MyFriendData.csv";
       
       public FriendList FriendList { get; private set; }
 
@@ -84,6 +88,17 @@ namespace BirthdayTracker
       // Method:  public void WriteFriends ()
       // Purpose: Writes friend data to the file specified
       //          in 'FRIEND_DATA_FILEPATH'.
+      // Throws:  UnauthorizedAccessException - if access is denied.
+      //          ArgumentException - if the save filepath is an empty
+      //             string or contains the name of a system device.
+      //          ArgumentNullException - if the save filepath is null.
+      //          DirectoryNotFoundExcetpion - if the save filepath
+      //             is invalid.
+      //          PathToLongException - if the save filepath exceeds the
+      //             system defined maximum length.
+      //          IOException - if save filepath contains invalid syntax.
+      //          SecurityException - if the caller does not have
+      //             the required permission.
       /**********************************************************/
       public void WriteFriends()
       {
@@ -118,7 +133,26 @@ namespace BirthdayTracker
             }
          }
       }
-      private void WriteFriendsToFile(string filepath, IEnumerable<Friend> friendList)
+
+      /**********************************************************/
+      // Method:  private void WriteFriendsToFile (string filepath,
+      //             IEnumerable<Friend> friendList)
+      // Purpose: Write friend records to CSV file at 'filepath'.
+      // Inputs:  string filepath, IEnumerable<Friend> friendList
+      // Throws:  UnauthorizedAccessException - if access is denied.
+      //          ArgumentException - if 'filepath' is an empty string
+      //             or contains the name of a system device.
+      //          ArgumentNullException - if 'filepath' is null.
+      //          DirectoryNotFoundExcetpion - if the specified
+      //             'filepath' is invalid.
+      //          PathToLongException - if 'filepath' exceeds the
+      //             system defined maximum length.
+      //          IOException - if 'filepath' contains invalid syntax.
+      //          SecurityException - if the caller does not have
+      //             the required permission.
+      /**********************************************************/
+      private void WriteFriendsToFile(string filepath,
+         IEnumerable<Friend> friendList)
       {
          using (var writer = new StreamWriter(filepath))
          {
