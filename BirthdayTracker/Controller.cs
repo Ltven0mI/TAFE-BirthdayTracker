@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
@@ -11,18 +12,23 @@ namespace BirthdayTracker
    // Purpose: To act as the interface between the program's
    // GUI (View) and the program's data (Model).
    // Author: Wade Rauschenbach
-   // Version: 0.2.0
-   // Date: 21-Aug-2020
+   // Version: 0.3.0
+   // Date: 24-Aug-2020
    // Tests: N/A
    /**********************************************************/
 
    /*********************** Changelog ************************/
    // [Unreleased]
+   // 
+   // [0.3.0] 24-Aug-2020
    // | [Added]
    // | - Implement new friend functionality.
    // | - Implement update friend functionality.
    // | - Implement delete friend functionality.
    // | - Implement exit options prompt.
+   // | [Fixed]
+   // | - Fix crash by performing exception handling for Friend loading.
+   // | - Fix crash by performing exception handling for Friend saving.
    //
    // [0.2.0] 21-Aug-2020
    // | [Changed]
@@ -51,14 +57,36 @@ namespace BirthdayTracker
          this.view = view;
 
          RegisterCallbacks();
-
-         model.ReadFriends();
-         model.FriendList.FilterByMonth(MonthFilter.All);
-         model.FriendList.SelectFriend(null);
       }
 
       private void RegisterCallbacks()
       {
+         // * Program - GUI - Shown * //
+         Program.GUI.Shown += (object sender, EventArgs args) =>
+         {
+            bool isLoadingFriends = true;
+            while (isLoadingFriends)
+            {
+               DialogResult dialogResult = LoadFriendRecords();
+               switch (dialogResult)
+               {
+                  case DialogResult.None:
+                     isLoadingFriends = false;
+                     break;
+                  case DialogResult.Ignore:
+                     isLoadingFriends = false;
+                     break;
+                  case DialogResult.Abort:
+                     Application.Exit();
+                     return;
+               }
+            }
+
+            model.FriendList.FilterByMonth(MonthFilter.All);
+            model.FriendList.SelectFriend(null);
+         };
+         // END - Program - GUI - Shown //
+
          // * Find - TextBox - KeyPress * //
          view.find_TextBox.KeyPress += (object sender, KeyPressEventArgs args) =>
          {
@@ -353,7 +381,25 @@ namespace BirthdayTracker
             
             // Check if user wants to write records
             if (exitResult == DialogResult.Yes)
-               model.WriteFriends();
+            {
+               bool isWritingFriends = true;
+               while (isWritingFriends)
+               {
+                  DialogResult dialogResult = SaveFriendRecords();
+                  switch (dialogResult)
+                  {
+                     case DialogResult.None:
+                        isWritingFriends = false;
+                        break;
+                     case DialogResult.Ignore:
+                        isWritingFriends = false;
+                        break;
+                     case DialogResult.Abort:
+                        isWritingFriends = false;
+                        return;
+                  }
+               }
+            }
             
             // Only exit if user chose YES or NO (Just a precaution...)
             if (exitResult == DialogResult.Yes || exitResult == DialogResult.No)
@@ -477,6 +523,79 @@ namespace BirthdayTracker
 
          // Return true for success
          return true;
+      }
+      
+      /**********************************************************/
+      // Method:  private DialogResult LoadFriendRecords ()
+      // Purpose: Attempt to load friend records from the save file.
+      //          In the case that loading was unsuccessful an
+      //          error is displayed to the user.
+      // Returns: None if loading was successful
+      // Returns: Abort if there was an error and
+      //          the user wants to close the application.
+      // Returns: Retry if the user wants to retry loading.
+      // Returns: Ignore if the user wants to ignore the error
+      //          and continue with no friends.
+      // Outputs: DialogResult
+      /**********************************************************/
+      private DialogResult LoadFriendRecords()
+      {
+         // Attempt to read friend records
+         try
+         {
+            model.ReadFriends();
+            return DialogResult.None;
+         }
+         catch (Exception e)
+         {
+            // Display error to user
+            string message = "An error occured while loading friend records:\n"
+               + $"Exception: {e.Message}\n\n"
+               + "Abort: Close the application.\n"
+               + "Retry: Try loading friend records again.\n"
+               + "Ignore: Ignore error and continue to application.";
+            DialogResult dialogResult = MessageBox.Show(message, "ERROR",
+               MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation);
+            // Return result
+            return dialogResult;
+         }
+      }
+
+      /**********************************************************/
+      // Method:  private DialogResult SaveFriendRecords ()
+      // Purpose: Save friend records to the save file.
+      //          In the case that saving was unsuccessful an
+      //             error is displayed to the user.
+      // Returns: None if saving was successful
+      // Returns: Abort if there was an error and
+      //             the user wants to return to the application
+      //             without closing.
+      // Returns: Retry if the user wants to retry saving.
+      // Returns: Ignore if the user wants to ignore the error
+      //             and exit without saving.
+      // Outputs: DialogResult
+      /**********************************************************/
+      private DialogResult SaveFriendRecords()
+      {
+         // Attempt to save friend records
+         try
+         {
+            model.WriteFriends();
+            return DialogResult.None;
+         }
+         catch (Exception e)
+         {
+            // Display error to user
+            string message = "An error occured while saving friend records:\n"
+            + $"Exception: {e.Message}\n\n"
+            + "Abort: Return back to application.\n"
+            + "Retry: Try saving friend records again.\n"
+            + "Ignore: Ignore unsuccessful save, and close application.";
+            DialogResult dialogResult = MessageBox.Show(message, "ERROR",
+               MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation);
+            // Return the result
+            return dialogResult;
+         }
       }
    }
 }
