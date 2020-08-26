@@ -125,7 +125,7 @@
             this.personsName_Textbox.Location = new System.Drawing.Point(223, 53);
             this.personsName_Textbox.Name = "personsName_Textbox";
             this.personsName_Textbox.Size = new System.Drawing.Size(240, 23);
-            this.personsName_Textbox.TabIndex = 1;
+            this.personsName_Textbox.TabIndex = 0;
             // 
             // likes_Textbox
             // 
@@ -141,7 +141,7 @@
             this.dislikes_Textbox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.dislikes_Textbox.Name = "dislikes_Textbox";
             this.dislikes_Textbox.Size = new System.Drawing.Size(240, 23);
-            this.dislikes_Textbox.TabIndex = 1;
+            this.dislikes_Textbox.TabIndex = 2;
             // 
             // bdayDay_Textbox
             // 
@@ -149,7 +149,7 @@
             this.bdayDay_Textbox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.bdayDay_Textbox.Name = "bdayDay_Textbox";
             this.bdayDay_Textbox.Size = new System.Drawing.Size(240, 23);
-            this.bdayDay_Textbox.TabIndex = 1;
+            this.bdayDay_Textbox.TabIndex = 3;
             // 
             // bdayMonth_Textbox
             // 
@@ -157,14 +157,14 @@
             this.bdayMonth_Textbox.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.bdayMonth_Textbox.Name = "bdayMonth_Textbox";
             this.bdayMonth_Textbox.Size = new System.Drawing.Size(240, 23);
-            this.bdayMonth_Textbox.TabIndex = 1;
+            this.bdayMonth_Textbox.TabIndex = 4;
             // 
             // find_Textbox
             // 
             this.find_Textbox.Location = new System.Drawing.Point(564, 53);
             this.find_Textbox.Name = "find_Textbox";
             this.find_Textbox.Size = new System.Drawing.Size(168, 23);
-            this.find_Textbox.TabIndex = 1;
+            this.find_Textbox.TabIndex = 9;
             // 
             // find_Label
             // 
@@ -181,7 +181,7 @@
             this.find_Button.Location = new System.Drawing.Point(518, 82);
             this.find_Button.Name = "find_Button";
             this.find_Button.Size = new System.Drawing.Size(214, 23);
-            this.find_Button.TabIndex = 2;
+            this.find_Button.TabIndex = 10;
             this.find_Button.Text = "Find";
             this.find_Button.UseVisualStyleBackColor = true;
             // 
@@ -190,7 +190,7 @@
             this.delete_Button.Location = new System.Drawing.Point(518, 197);
             this.delete_Button.Name = "delete_Button";
             this.delete_Button.Size = new System.Drawing.Size(214, 23);
-            this.delete_Button.TabIndex = 2;
+            this.delete_Button.TabIndex = 13;
             this.delete_Button.Text = "Delete";
             this.delete_Button.UseVisualStyleBackColor = true;
             // 
@@ -199,7 +199,7 @@
             this.update_Button.Location = new System.Drawing.Point(518, 168);
             this.update_Button.Name = "update_Button";
             this.update_Button.Size = new System.Drawing.Size(214, 23);
-            this.update_Button.TabIndex = 2;
+            this.update_Button.TabIndex = 12;
             this.update_Button.Text = "Update";
             this.update_Button.UseVisualStyleBackColor = true;
             // 
@@ -208,7 +208,7 @@
             this.new_Button.Location = new System.Drawing.Point(518, 139);
             this.new_Button.Name = "new_Button";
             this.new_Button.Size = new System.Drawing.Size(214, 23);
-            this.new_Button.TabIndex = 2;
+            this.new_Button.TabIndex = 11;
             this.new_Button.Text = "New";
             this.new_Button.UseVisualStyleBackColor = true;
             // 
@@ -218,7 +218,7 @@
             this.navFirst_Button.Location = new System.Drawing.Point(24, 247);
             this.navFirst_Button.Name = "navFirst_Button";
             this.navFirst_Button.Size = new System.Drawing.Size(35, 23);
-            this.navFirst_Button.TabIndex = 2;
+            this.navFirst_Button.TabIndex = 5;
             this.navFirst_Button.Text = "|<";
             this.navFirst_Button.UseVisualStyleBackColor = true;
             // 
@@ -228,7 +228,7 @@
             this.navPrev_Button.Location = new System.Drawing.Point(65, 247);
             this.navPrev_Button.Name = "navPrev_Button";
             this.navPrev_Button.Size = new System.Drawing.Size(35, 23);
-            this.navPrev_Button.TabIndex = 2;
+            this.navPrev_Button.TabIndex = 6;
             this.navPrev_Button.Text = "<";
             this.navPrev_Button.UseVisualStyleBackColor = true;
             // 
@@ -238,7 +238,7 @@
             this.navNext_Button.Location = new System.Drawing.Point(106, 247);
             this.navNext_Button.Name = "navNext_Button";
             this.navNext_Button.Size = new System.Drawing.Size(35, 23);
-            this.navNext_Button.TabIndex = 2;
+            this.navNext_Button.TabIndex = 7;
             this.navNext_Button.Text = ">";
             this.navNext_Button.UseVisualStyleBackColor = true;
             // 
@@ -248,7 +248,7 @@
             this.navLast_Button.Location = new System.Drawing.Point(147, 247);
             this.navLast_Button.Name = "navLast_Button";
             this.navLast_Button.Size = new System.Drawing.Size(35, 23);
-            this.navLast_Button.TabIndex = 2;
+            this.navLast_Button.TabIndex = 8;
             this.navLast_Button.Text = ">|";
             this.navLast_Button.UseVisualStyleBackColor = true;
             // 
@@ -273,7 +273,8 @@
             this.birthdayList_Textbox.ReadOnly = true;
             this.birthdayList_Textbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.birthdayList_Textbox.Size = new System.Drawing.Size(439, 169);
-            this.birthdayList_Textbox.TabIndex = 3;
+            this.birthdayList_Textbox.TabIndex = 0;
+            this.birthdayList_Textbox.TabStop = false;
             this.birthdayList_Textbox.WordWrap = false;
             // 
             // exit_Button
@@ -281,7 +282,7 @@
             this.exit_Button.Location = new System.Drawing.Point(518, 478);
             this.exit_Button.Name = "exit_Button";
             this.exit_Button.Size = new System.Drawing.Size(214, 23);
-            this.exit_Button.TabIndex = 2;
+            this.exit_Button.TabIndex = 15;
             this.exit_Button.Text = "Exit";
             this.exit_Button.UseVisualStyleBackColor = true;
             // 
@@ -294,7 +295,7 @@
             this.search_Panel.Location = new System.Drawing.Point(518, 332);
             this.search_Panel.Name = "search_Panel";
             this.search_Panel.Size = new System.Drawing.Size(214, 116);
-            this.search_Panel.TabIndex = 4;
+            this.search_Panel.TabIndex = 14;
             // 
             // search_Textbox
             // 
@@ -304,7 +305,8 @@
             this.search_Textbox.Name = "search_Textbox";
             this.search_Textbox.ReadOnly = true;
             this.search_Textbox.Size = new System.Drawing.Size(206, 23);
-            this.search_Textbox.TabIndex = 1;
+            this.search_Textbox.TabIndex = 0;
+            this.search_Textbox.TabStop = false;
             this.search_Textbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // search_Button
@@ -312,7 +314,7 @@
             this.search_Button.Location = new System.Drawing.Point(3, 32);
             this.search_Button.Name = "search_Button";
             this.search_Button.Size = new System.Drawing.Size(206, 23);
-            this.search_Button.TabIndex = 2;
+            this.search_Button.TabIndex = 14;
             this.search_Button.Text = "Birthdays in Month of:";
             this.search_Button.UseVisualStyleBackColor = true;
             // 
