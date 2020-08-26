@@ -1,2 +1,3 @@
-# PLACEHOLDER
-TODO: Add .NET projects to the *src* folder and run `docfx` to generate **REAL** *API Documentation*!
+# BirthdayTracker Public API
+This documentation aims to assist current and future developers in maintaining
+and expanding the BirthdayTracker Application codebase.
