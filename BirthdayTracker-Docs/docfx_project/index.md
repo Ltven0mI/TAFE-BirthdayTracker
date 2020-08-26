@@ -36,6 +36,34 @@ Run the following command from inside the solution folder:
 > dotnet run
 ```
 
+## Generating Documentation
+This project utilizes [DocFX](https://dotnet.github.io/docfx/) for generating
+static site documentation.
+
+If you wish to generate the documentation yourself, first follow the steps in
+[Installing / Getting started](#installing--getting-started) then procede with
+the steps below.
+
+### Requirements
+- DocFX (https://dotnet.github.io/docfx/)
+
+### 1. Install DocFX and add to PATH
+Follow the steps on the DocFX site [Use DocFX as a command-line tool](https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html#2-use-docfx-as-a-command-line-tool)
+to install and add DocFX to your PATH.
+
+### 2. Build the Website
+Run the following command from inside `BirthdayTracker-Docs/docfx_project/`
+```shell
+> docfx
+```
+
+### 3. Preview the Website
+Run the following command from inside `BirthdayTracker-Docs/docfx_project/`
+```shell
+> docfx serve _site
+```
+The website should now be accessible from your web-browser at `localhost:8080`
+
 ## Features
 
 The BirthdayTracker application offers many features, some of which are:
