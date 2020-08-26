@@ -10,7 +10,7 @@ namespace BirthdayTracker
    // Author: Wade Rauschenbach
    // Version: 0.3.0
    // Date: 21-Aug-2020
-   // Tests: N/A
+   // Tests: Unit test completed 25-Aug-2020
    /**********************************************************/
 
    /*********************** Changelog ************************/
